@@ -1,22 +1,15 @@
 const path = require("node:path");
-const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
-const { chromium } = require("/Users/yeonsolkim/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
+const { chromium } = require("playwright");
 
 async function main() {
-  const [, , inputHtml, outputPdf] = process.argv;
-  if (!inputHtml || !outputPdf) {
-    console.error("usage: node html_to_pdf.cjs input.html output.pdf");
+  const [, , inputHtml, outputPdf = "fp-lean.pdf"] = process.argv;
+  if (!inputHtml) {
+    console.error("usage: node html_to_pdf.cjs input.html [output.pdf]");
     process.exit(2);
   }
 
-  const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-  const launchOptions = { headless: true };
-  if (fs.existsSync(chromePath)) {
-    launchOptions.executablePath = chromePath;
-  }
-
-  const browser = await chromium.launch(launchOptions);
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 1800 } });
   await page.goto(pathToFileURL(path.resolve(inputHtml)).href, { waitUntil: "networkidle" });
 
@@ -39,7 +32,7 @@ async function main() {
   await browser.close();
 }
 
-main().catch(err => {
-  console.error(err);
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
 });
