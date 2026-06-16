@@ -1,0 +1,12 @@
+{
+  "name": "fp-lean-print",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Letter-size print layout support for Functional Programming in Lean.",
+  "scripts": {
+    "pdf": "node html_to_pdf.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}
