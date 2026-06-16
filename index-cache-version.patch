@@ -1,9 +1,16 @@
 diff --git a/index.html b/index.html
 --- a/index.html
 +++ b/index.html
-@@
+@@ -12,13 +12,13 @@
+     <link rel="stylesheet" href="book.css">
+     <link rel="stylesheet" href="book-screen.css?v=letter15" media="screen">
 -    <link rel="stylesheet" href="book-print.css?v=letter15">
 +    <link rel="stylesheet" href="book-print.css?v=letter16">
-@@
+     <link rel="stylesheet" href="print-clean.css" media="print">
+   </head>
+   <body>
+     <script src="paged.polyfill.js?v=letter3" defer="defer"></script>
 -    <script src="book-setup.js?v=letter15" defer="defer"></script>
 +    <script src="book-setup.js?v=letter16" defer="defer"></script>
+   </body>
+ </html>
