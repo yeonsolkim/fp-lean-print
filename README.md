@@ -1,8 +1,8 @@
 # fp-lean-print
 
 Print-layout files for preparing a Letter-size, book-style PDF of
-Functional Programming in Lean, tuned to feel closer to the Mathematics in
-Lean PDF layout.
+_Functional Programming in Lean_, tuned to feel closer to the _Mathematics in
+Lean_ PDF layout.
 
 This package intentionally stores the small, reusable layout layer rather
 than the full generated HTML bundle. The full local bundle contains generated
