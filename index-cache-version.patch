@@ -1,0 +1,9 @@
+diff --git a/index.html b/index.html
+--- a/index.html
++++ b/index.html
+@@
+-    <link rel="stylesheet" href="book-print.css?v=letter15">
++    <link rel="stylesheet" href="book-print.css?v=letter16">
+@@
+-    <script src="book-setup.js?v=letter15" defer="defer"></script>
++    <script src="book-setup.js?v=letter16" defer="defer"></script>
