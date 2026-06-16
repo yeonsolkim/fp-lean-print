@@ -1,7 +1,7 @@
 # fp-lean-print
 
 Print-layout support files for producing a Letter-size, book-style PDF of
-_Functional Programming in Lean_, tuned to resemble the visual rhythm of the
+[_Functional Programming in Lean_](https://lean-lang.org/functional_programming_in_lean/), tuned to resemble the visual rhythm of the
 _Mathematics in Lean_ PDF.
 
 This repository is a small reusable layout layer. It does not include the
