@@ -1,0 +1,394 @@
+\documentclass[10pt,letterpaper,twoside,openright]{book}
+\usepackage[margin=1in,headheight=14pt,headsep=18pt,footskip=0.38in]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage{xcolor}
+\usepackage{needspace}
+\usepackage{fvextra}
+\usepackage[most]{tcolorbox}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage{bookmark}
+
+\IfFontExistsTF{FreeSerif}{\setmainfont{FreeSerif}}{\IfFontExistsTF{STIX Two Text}{\setmainfont{STIX Two Text}}{\setmainfont{Libertinus Serif}}}
+\IfFontExistsTF{STIX Two Math}{\setmathfont{STIX Two Math}}{\setmathfont{Libertinus Math}}
+\IfFontExistsTF{FreeSans}{\setsansfont{FreeSans}}{\IfFontExistsTF{TeX Gyre Heros}{\setsansfont{TeX Gyre Heros}}{\setsansfont{Helvetica Neue}}}
+\directlua{luaotfload.add_fallback("fpLeanCodeFallback", {
+  "STIX Two Math:mode=harf;",
+  "Apple Symbols:mode=harf;"
+})}
+\IfFontExistsTF{FreeMono}
+  {\setmonofont{FreeMono}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}
+  {\IfFontExistsTF{JuliaMono}
+    {\setmonofont{JuliaMono}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}
+    {\IfFontExistsTF{Iosevka}
+      {\setmonofont{Iosevka}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}
+      {\IfFontExistsTF{DejaVu Sans Mono}
+        {\setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}
+        {\IfFontExistsTF{Noto Sans Mono}
+          {\setmonofont{Noto Sans Mono}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}
+          {\setmonofont{Menlo}[Scale=MatchLowercase,RawFeature={fallback=fpLeanCodeFallback}]}}}}}
+
+\definecolor{bookblue}{HTML}{1F5A70}
+\definecolor{bookink}{HTML}{1F1F1F}
+\definecolor{tocgray}{HTML}{4F6670}
+\definecolor{codebg}{HTML}{EDEDED}
+\definecolor{outputbg}{HTML}{F0F0F0}
+\definecolor{codeborder}{HTML}{A8A8A8}
+\definecolor{errorred}{HTML}{9D3A36}
+\definecolor{warnorange}{HTML}{8B6A2B}
+\definecolor{leadergray}{HTML}{222222}
+\definecolor{leankeyword}{HTML}{1F7A3B}
+\definecolor{leanstring}{HTML}{245A9C}
+\definecolor{leancomment}{HTML}{5F8A8A}
+\definecolor{leansort}{HTML}{725A8A}
+\definecolor{leanconst}{HTML}{315D6D}
+\definecolor{leannumber}{HTML}{755D2E}
+\definecolor{leansorry}{HTML}{B33A3A}
+\hypersetup{colorlinks=true, linkcolor=bookblue, urlcolor=bookblue, citecolor=bookblue}
+
+\newcommand{\icode}[1]{\texttt{\small #1}}
+\newcommand{\leanKeyword}[1]{\textcolor{leankeyword}{\textbf{#1}}}
+\newcommand{\leanString}[1]{\textcolor{leanstring}{#1}}
+\newcommand{\leanComment}[1]{\textcolor{leancomment}{\textit{#1}}}
+\newcommand{\leanSort}[1]{\textcolor{leansort}{#1}}
+\newcommand{\leanConst}[1]{\textcolor{leanconst}{#1}}
+\newcommand{\leanNumber}[1]{\textcolor{leannumber}{#1}}
+\newcommand{\leanSorry}[1]{\textcolor{leansorry}{\textbf{#1}}}
+\newcommand{\bookRule}{\noindent\makebox[\linewidth][r]{\rule{\linewidth}{1pt}}}
+\newcommand{\chapterword}{%
+  \ifcase\value{chapter}ZERO%
+  \or ONE%
+  \or TWO%
+  \or THREE%
+  \or FOUR%
+  \or FIVE%
+  \or SIX%
+  \or SEVEN%
+  \or EIGHT%
+  \or NINE%
+  \or TEN%
+  \or ELEVEN%
+  \or TWELVE%
+  \else \thechapter%
+  \fi}
+\newcommand{\plainchapter}[1]{%
+  \cleardoublepage
+  \chapter*{#1}
+  \addcontentsline{toc}{chapter}{#1}
+  \markboth{#1}{#1}
+}
+\newcommand{\plainchapternotoc}[1]{%
+  \cleardoublepage
+  \chapter*{#1}
+  \markboth{#1}{#1}
+}
+\newcommand{\interludechapter}[1]{%
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{#1}
+  \markboth{#1}{#1}
+  \thispagestyle{plain}
+  \vspace*{0.2in}
+  {\sffamily\bfseries\raggedleft\color{bookink}
+    \bookRule\par\vspace{0.55em}
+    {\Large\mbox{INTERLUDE}\par}
+    \vspace{0.35em}
+    \bookRule\par
+    \vspace{0.32in}
+    {\LARGE\MakeUppercase{#1}\par}
+  }
+  \vspace{0.38in}
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 1pt}
+\setlist{itemsep=2pt, topsep=4pt}
+\raggedbottom
+\setcounter{tocdepth}{1}
+
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page
+    \else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
+
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\raggedleft\color{bookink}}
+  {\bookRule\\[0.45em]\Large\mbox{CHAPTER}\\[0.2em]\Large\mbox{\chapterword}\\[0.45em]\bookRule}
+  {16pt}
+  {\LARGE\MakeUppercase}
+\titleformat{name=\chapter,numberless}[display]
+  {\sffamily\bfseries\raggedleft\color{bookink}}
+  {\bookRule}
+  {16pt}
+  {\LARGE\MakeUppercase}
+\titleformat{\section}{\Needspace{6\baselineskip}\sffamily\Large\bfseries\color{bookblue}}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\Needspace{5\baselineskip}\sffamily\large\bfseries\color{bookblue}}{\thesubsection}{0.65em}{}
+\titleformat{\subsubsection}{\Needspace{4\baselineskip}\sffamily\normalsize\bfseries\color{bookblue}}{\thesubsubsection}{0.65em}{}
+\titlespacing*{\chapter}{0pt}{0.2in}{0.32in}
+\titlespacing*{\section}{0pt}{16pt plus 4pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt plus 3pt}{5pt}
+\titlespacing*{\subsubsection}{0pt}{10pt plus 2pt}{4pt}
+
+\renewcommand{\contentsname}{CONTENTS}
+\titlecontents{chapter}[0pt]{\addvspace{5pt}\sffamily\bfseries\color{bookblue}\linespread{0.94}\selectfont}
+  {\contentslabel{2.2em}}{}{\textcolor{leadergray}{\titlerule*[0.42pc]{.}}\textcolor{bookink}{\bfseries\contentspage}}
+\titlecontents{section}[2.7em]{\sffamily\small\color{bookblue}\linespread{0.9}\selectfont}
+  {\contentslabel{3em}}{}{\textcolor{leadergray}{\titlerule*[0.42pc]{.}}\textcolor{bookink}{\bfseries\contentspage}}
+\titlecontents{subsection}[5.7em]{\sffamily\footnotesize\color{tocgray}\linespread{0.9}\selectfont}
+  {\contentslabel{3.4em}}{}{\textcolor{leadergray}{\titlerule*[0.42pc]{.}}\textcolor{bookink}{\contentspage}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\sffamily\scriptsize\bfseries Functional Programming in Lean - Lean 4.26.0}
+\fancyhead[RO]{\sffamily\scriptsize\bfseries Functional Programming in Lean - Lean 4.26.0}
+\fancyfoot[LE]{\sffamily\small\bfseries\thepage}
+\fancyfoot[RE]{\sffamily\small\bfseries\nouppercase{\leftmark}}
+\fancyfoot[LO]{\sffamily\small\bfseries\nouppercase{\leftmark}}
+\fancyfoot[RO]{\sffamily\small\bfseries\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{\thechapter.\ #1}}
+\renewcommand{\sectionmark}[1]{}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\sffamily\small\bfseries\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{tocplain}{%
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\sffamily\small\bfseries\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+\makeatletter
+\newcommand{\miltableofcontents}{%
+  \cleardoublepage
+  \begingroup
+    \pagestyle{tocplain}
+    \thispagestyle{tocplain}
+    \phantomsection
+    \vspace*{42pt}
+    {\sffamily\bfseries\LARGE\raggedleft\color{bookink}\contentsname\par}
+    \vspace{36pt}
+    \@starttoc{toc}
+  \endgroup
+}
+\makeatother
+
+\fvset{
+  fontsize=\small,
+  breaklines=true,
+  breakanywhere=true,
+  tabsize=2,
+  obeytabs=true
+}
+\newenvironment{leaninput}{%
+  \VerbatimEnvironment%
+  \fvset{commandchars=\\\{\}}%
+  \begin{tcolorbox}[
+    breakable, enhanced,
+    colback=codebg, colframe=codeborder, boxrule=0.35pt, arc=2pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    before skip=6pt, after skip=6pt
+  ]%
+  \begin{Verbatim}
+}{%
+  \end{Verbatim}
+  \end{tcolorbox}
+}
+\newenvironment{leanoutput}{%
+  \VerbatimEnvironment
+  \begin{tcolorbox}[
+    breakable, enhanced,
+    colback=outputbg, colframe=codeborder, boxrule=0.35pt, arc=2pt,
+    left=6pt, right=6pt, top=3pt, bottom=3pt,
+    before skip=2pt, after skip=6pt
+  ]%
+  \begin{Verbatim}
+}{%
+  \end{Verbatim}
+  \end{tcolorbox}
+}
+\newenvironment{leanerror}{%
+  \VerbatimEnvironment
+  \begin{tcolorbox}[
+    breakable, enhanced,
+    colback=outputbg, colframe=codeborder, boxrule=0.35pt, arc=2pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    before skip=4pt, after skip=6pt
+  ]%
+  \begin{Verbatim}
+}{%
+  \end{Verbatim}
+  \end{tcolorbox}
+}
+\newenvironment{leanwarning}{%
+  \VerbatimEnvironment
+  \begin{tcolorbox}[
+    breakable, enhanced,
+    colback=outputbg, colframe=codeborder, boxrule=0.35pt, arc=2pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    before skip=4pt, after skip=6pt
+  ]%
+  \begin{Verbatim}
+}{%
+  \end{Verbatim}
+  \end{tcolorbox}
+}
+\newenvironment{tableblock}{%
+  \begin{center}
+  \small
+  \renewcommand{\arraystretch}{1.2}
+}{%
+  \end{center}
+}
+
+\begin{document}
+\begin{titlepage}
+\sffamily
+\raggedleft
+\vspace*{0.9in}
+{\color{bookink}\bookRule\par}
+\vspace{0.3in}
+{\color{bookink}\Huge\bfseries FUNCTIONAL PROGRAMMING IN LEAN\par}
+\vspace{0.28in}
+{\Large David Thrane Christiansen\par}
+\vspace{0.18in}
+{\large Lean release 4.26.0 examples\par}
+\vfill
+{\large Print edition, June 2026\par}
+\end{titlepage}
+\frontmatter
+\tableofcontents
+\mainmatter
+\chapter{Getting to Know Lean}
+
+\section{Evaluating Expressions}
+
+The most important thing to understand as a programmer learning Lean is how evaluation works. Evaluation is the process of finding the value of an expression, just as one does in arithmetic. For instance, the value of \icode{15 - 6} is \icode{9} and the value of \icode{2 × (3 + 1)} is \icode{8}. To find the value of the latter expression, \icode{3 + 1} is first replaced by \icode{4}, yielding \icode{2 × 4}, which itself can be reduced to \icode{8}. Sometimes, mathematical expressions contain variables: the value of \icode{x + 1} cannot be computed until we know what the value of \icode{x} is. In Lean, programs are first and foremost expressions, and the primary way to think about computation is as evaluating expressions to find their values.
+
+Most programming languages are \emph{imperative}, where a program consists of a series of statements that should be carried out in order to find the program's result. Programs have access to mutable memory, so the value referred to by a variable can change over time. In addition to mutable state, programs may have other side effects, such as deleting files, making outgoing network connections, throwing or catching exceptions, and reading data from a database. “Side effects” is essentially a catch-all term for describing things that may happen in a program that don't follow the model of evaluating mathematical expressions.
+
+In Lean, however, programs work the same way as mathematical expressions. Once given a value, variables cannot be reassigned. Evaluating an expression cannot have side effects. If two expressions have the same value, then replacing one with the other will not cause the program to compute a different result. This does not mean that Lean cannot be used to write \icode{Hello, world!} to the console, but performing I/O is not a core part of the experience of using Lean in the same way. Thus, this chapter focuses on how to evaluate expressions interactively with Lean, while the next chapter describes how to write, compile, and run the \icode{Hello, world!} program.
+
+To ask Lean to evaluate an expression, write \icode{\#eval} before it in your editor, which will then report the result back. Typically, the result is found by putting the cursor or mouse pointer over \icode{\#eval}. For instance,
+
+\begin{leaninput}
+\leanKeyword{\#eval} \leanNumber{1} + \leanNumber{2}
+\end{leaninput}
+
+yields the value
+
+\begin{leanoutput}
+3
+\end{leanoutput}
+
+Lean obeys the ordinary rules of precedence and associativity for arithmetic operators. That is,
+
+\begin{leaninput}
+\leanKeyword{\#eval} \leanNumber{1} + \leanNumber{2} * \leanNumber{5}
+\end{leaninput}
+
+yields the value \icode{11} rather than \icode{15}.
+
+While both ordinary mathematical notation and the majority of programming languages use parentheses (e.g. \icode{f(x)}) to apply a function to its arguments, Lean simply writes the function next to its arguments (e.g. \icode{f x}). Function application is one of the most common operations, so it pays to keep it concise. Rather than writing
+
+\begin{leaninput}
+#eval String.append("Hello, ", "Lean!")
+\end{leaninput}
+
+to compute \icode{"Hello, Lean!"}, one would instead write
+
+\begin{leaninput}
+\leanKeyword{\#eval} \leanConst{String.append} \leanString{"Hello, "} \leanString{"Lean!"}
+\end{leaninput}
+
+where the function's two arguments are simply written next to it with spaces.
+
+Just as the order-of-operations rules for arithmetic demand parentheses in the expression \icode{(1 + 2) * 5}, parentheses are also necessary when a function's argument is to be computed via another function call. For instance, parentheses are required in
+
+\begin{leaninput}
+\leanKeyword{\#eval} \leanConst{String.append} \leanString{"great "} (\leanConst{String.append} \leanString{"oak "} \leanString{"tree"})
+\end{leaninput}
+
+because otherwise the second \icode{String.append} would be interpreted as an argument to the first, rather than as a function being passed \icode{"oak "} and \icode{"tree"} as arguments. The value of the inner \icode{String.append} call must be found first, after which it can be appended to \icode{"great "}, yielding the final value \icode{"great oak tree"}.
+
+Imperative languages often have two kinds of conditional: a conditional \emph{statement} that determines which instructions to carry out based on a Boolean value, and a conditional \emph{expression} that determines which of two expressions to evaluate based on a Boolean value. For instance, in C and C++, the conditional statement is written using \icode{if} and \icode{else}, while the conditional expression is written with a ternary operator in which \icode{?} and \icode{:} separate the condition from the branches. In Python, the conditional statement begins with \icode{if}, while the conditional expression puts \icode{if} in the middle. Because Lean is an expression-oriented functional language, there are no conditional statements, only conditional expressions. They are written using \icode{if}, \icode{then}, and \icode{else}. For example,
+
+\begin{leaninput}
+\leanConst{String.append} \leanString{"it is "} (\leanKeyword{if} \leanNumber{1} > \leanNumber{2} \leanKeyword{then} \leanString{"yes"} \leanKeyword{else} \leanString{"no"})
+\end{leaninput}
+
+evaluates to
+
+\begin{leaninput}
+\leanConst{String.append} \leanString{"it is "} (\leanKeyword{if} \leanConst{false} \leanKeyword{then} \leanString{"yes"} \leanKeyword{else} \leanString{"no"})
+\end{leaninput}
+
+which evaluates to
+
+\begin{leaninput}
+\leanConst{String.append} \leanString{"it is "} \leanString{"no"}
+\end{leaninput}
+
+which finally evaluates to \icode{"it is no"}.
+
+For the sake of brevity, a series of evaluation steps like this will sometimes be written with arrows between them:
+
+\begin{leaninput}
+\leanConst{String.append} \leanString{"it is "} (\leanKeyword{if} \leanNumber{1} > \leanNumber{2} \leanKeyword{then} \leanString{"yes"} \leanKeyword{else} \leanString{"no"})
+  ==> 
+\leanConst{String.append} \leanString{"it is "} (\leanKeyword{if} \leanConst{false} \leanKeyword{then} \leanString{"yes"} \leanKeyword{else} \leanString{"no"})
+  ==> 
+\leanConst{String.append} \leanString{"it is "} \leanString{"no"}
+  ==> 
+\leanString{"it is no"}
+\end{leaninput}
+
+\subsection{Messages You May Meet}
+
+Asking Lean to evaluate a function application that is missing an argument will lead to an error message. In particular, the example
+
+\begin{leaninput}
+\leanKeyword{\#eval} \leanConst{String.append} \leanString{"it is "}
+\end{leaninput}
+
+yields a quite long error message:
+
+\begin{leanerror}
+could not synthesize a `ToExpr`, `Repr`, or `ToString` instance for type
+  String → String
+\end{leanerror}
+
+This message occurs because Lean functions that are applied to only some of their arguments return new functions that are waiting for the rest of the arguments. Lean cannot display functions to users, and thus returns an error when asked to do so.
+
+\subsection{Exercises}
+
+What are the values of the following expressions? Work them out by hand, then enter them into Lean to check your work.
+
+\begin{itemize}
+\item \icode{42 + 19}
+\item \icode{String.append "A" (String.append "B" "C")}
+\item \icode{String.append (String.append "A" "B") "C"}
+\item \icode{if 3 == 3 then 5 else 7}
+\item \icode{if 3 == 4 then "equal" else "not equal"}
+\end{itemize}
+
+\end{document}

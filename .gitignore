@@ -1,0 +1,16 @@
+tmp/
+latex-prototype/build/
+latex-prototype/fp-lean.tex
+.DS_Store
+**/.DS_Store
+
+# Local reference PDFs and downloaded/generated HTML bundle assets.
+Mathematics in Lean.pdf
+-verso-data/
+-verso-docs.json
+-verso-search/
+book*.css
+book-*.js
+*.polyfill.js
+static/
+verso-vars.css

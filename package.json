@@ -2,11 +2,13 @@
   "name": "fp-lean-print",
   "version": "0.1.0",
   "private": true,
-  "description": "Letter-size print layout support for Functional Programming in Lean.",
+  "description": "LuaLaTeX PDF layout support for Functional Programming in Lean.",
   "scripts": {
-    "pdf": "node html_to_pdf.cjs"
-  },
-  "devDependencies": {
-    "playwright": "^1.56.0"
+    "latex:prototype": "python3 tools/html_to_latex_prototype.py --input index.html --section evaluating --output latex-prototype/evaluating-expressions.tex",
+    "latex:book": "python3 tools/html_to_latex_prototype.py --input index.html --book --output latex-prototype/fp-lean.tex",
+    "latex:build": "mkdir -p tmp/texmf-var latex-prototype/build && TEXMFVAR=$PWD/tmp/texmf-var TEXMFCACHE=$PWD/tmp/texmf-var latexmk -lualatex -interaction=nonstopmode -halt-on-error -outdir=latex-prototype/build latex-prototype/evaluating-expressions.tex",
+    "latex:build:book": "mkdir -p tmp/texmf-var latex-prototype/build && TEXMFVAR=$PWD/tmp/texmf-var TEXMFCACHE=$PWD/tmp/texmf-var latexmk -lualatex -interaction=nonstopmode -halt-on-error -outdir=latex-prototype/build latex-prototype/fp-lean.tex",
+    "latex:validate": "python3 tools/validate_latex_pdf.py latex-prototype/build/evaluating-expressions.pdf",
+    "latex:validate:book": "python3 tools/validate_latex_pdf.py latex-prototype/build/fp-lean.pdf --needle '#eval 1 + 2' --needle 'String.append' --needle ':=' --needle 'partial def dump'"
   }
 }
